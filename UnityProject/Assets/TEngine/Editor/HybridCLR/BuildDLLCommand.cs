@@ -42,6 +42,18 @@ public static class BuildDLLCommand
         UpdateSettingEditor.ForceUpdateAssemblies();
 #endif
     }
+	
+	/// <summary>
+    /// 强制同步Assemblies。
+    /// </summary>
+    [MenuItem("HybridCLR/Build/Force UpdateAssemblies", false, 30)]
+    public static void ForceUpdateAssembliesHybridCLR()
+    {
+#if ENABLE_HYBRIDCLR
+        UpdateSettingEditor.ForceUpdateAssemblies();
+#endif
+    }
+	
     #endregion
     
     #region Obfuz/Define Symbols
@@ -73,6 +85,7 @@ public static class BuildDLLCommand
     {
 #if ENABLE_HYBRIDCLR
         BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
+        StripAOTDllCommand.GenerateStripedAOTDlls(target);
         CompileDllCommand.CompileDll(target);
         CopyAOTHotUpdateDlls(target);
 #endif
@@ -81,6 +94,7 @@ public static class BuildDLLCommand
     public static void BuildAndCopyDlls(BuildTarget target)
     {
 #if ENABLE_HYBRIDCLR
+        StripAOTDllCommand.GenerateStripedAOTDlls(target);
         CompileDllCommand.CompileDll(target);
         CopyAOTHotUpdateDlls(target);
 #endif
@@ -106,7 +120,9 @@ public static class BuildDLLCommand
         {
             string srcDir = obfuscationRelativeAssemblyNames.Contains(assName) ? obfuscatedHotUpdateDllPath : hotUpdateDllPath;
             string srcFile = $"{srcDir}/{assName}.dll";
-            string dstFile = Application.dataPath +"/"+ TEngine.Settings.UpdateSetting.AssemblyTextAssetPath  + $"/{assName}.dll.bytes";
+            
+            Debug.Log($"assName = {assName} && srcFile = {srcFile}");
+            string dstFile = Application.dataPath +"/"+ TEngine.Settings.UpdateSetting.AssemblyTextAsset2HotFixPath  + $"/{assName}.dll.bytes";
             if (File.Exists(srcFile))
             {
                 File.Copy(srcFile, dstFile, true);
@@ -123,7 +139,7 @@ public static class BuildDLLCommand
 #if ENABLE_HYBRIDCLR
         var target = EditorUserBuildSettings.activeBuildTarget;
         string aotAssembliesSrcDir = SettingsUtil.GetAssembliesPostIl2CppStripDir(target);
-        string aotAssembliesDstDir = Application.dataPath +"/"+ TEngine.Settings.UpdateSetting.AssemblyTextAssetPath;
+        string aotAssembliesDstDir = Application.dataPath +"/"+ TEngine.Settings.UpdateSetting.AssemblyTextAsset2AOTPath;
 
         foreach (var dll in TEngine.Settings.UpdateSetting.AOTMetaAssemblies)
         {
@@ -146,7 +162,7 @@ public static class BuildDLLCommand
         var target = EditorUserBuildSettings.activeBuildTarget;
 
         string hotfixDllSrcDir = SettingsUtil.GetHotUpdateDllsOutputDirByTarget(target);
-        string hotfixAssembliesDstDir = Application.dataPath +"/"+ TEngine.Settings.UpdateSetting.AssemblyTextAssetPath;
+        string hotfixAssembliesDstDir = Application.dataPath +"/"+ TEngine.Settings.UpdateSetting.AssemblyTextAsset2HotFixPath;
         foreach (var dll in SettingsUtil.HotUpdateAssemblyFilesExcludePreserved)
         {
             string dllPath = $"{hotfixDllSrcDir}/{dll}";

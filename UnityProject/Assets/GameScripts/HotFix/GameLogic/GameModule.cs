@@ -56,20 +56,13 @@ public class GameModule
     public static IAudioModule Audio => _audio ??= Get<IAudioModule>();
 
     private static IAudioModule _audio;
-
+    
     /// <summary>
     /// 获取UI模块。
     /// </summary>
     public static UIModule UI => _ui ??= UIModule.Instance;
 
     private static UIModule _ui;
-
-    /// <summary>
-    /// 获取场景模块。
-    /// </summary>
-    public static ISceneModule Scene => _scene ??= Get<ISceneModule>();
-
-    private static ISceneModule _scene;
 
     /// <summary>
     /// 获取计时器模块。
@@ -111,7 +104,6 @@ public class GameModule
         _resource = null;
         _audio = null;
         _ui = null;
-        _scene = null;
         _timer = null;
         _localization = null;
     }

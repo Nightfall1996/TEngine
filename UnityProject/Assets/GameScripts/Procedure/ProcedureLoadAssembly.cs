@@ -10,6 +10,7 @@ using TEngine;
 using System.Reflection;
 using YooAsset;
 using Cysharp.Threading.Tasks;
+using Launcher;
 
 namespace Procedure
 {
@@ -83,7 +84,7 @@ namespace Procedure
                             assetLocation = Utility.Path.GetRegularPath(
                                 Path.Combine(
                                     "Assets",
-                                    _setting.AssemblyTextAssetPath,
+                                    _setting.AssemblyTextAsset2HotFixPath,
                                     $"{hotUpdateDllName}{_setting.AssemblyTextAssetExtension}"));
                         }
 
@@ -145,7 +146,8 @@ namespace Procedure
                 Log.Fatal($"Main logic entry method 'Entrance' missing.");
                 return;
             }
-            object[] objects = new object[] { new object[] { _hotfixAssemblyList } };
+            Action myDelegate = GameAppStartGameFinished;
+            object[] objects = new object[] { new object[] { _hotfixAssemblyList, myDelegate} };
             entryMethod.Invoke(appType, objects);
         }
 
@@ -241,7 +243,7 @@ namespace Procedure
                     assetLocation = Utility.Path.GetRegularPath(
                         Path.Combine(
                             "Assets",
-                            _setting.AssemblyTextAssetPath,
+                            _setting.AssemblyTextAsset2AOTPath,
                             $"{aotDllName}{_setting.AssemblyTextAssetExtension}"));
                 }
 
@@ -289,6 +291,11 @@ namespace Procedure
                 _loadMetadataAssemblyComplete = _loadMetadataAssemblyWait && 0 == _loadMetadataAssetCount;
             }
             _resourceModule.UnloadAsset(textAsset);
+        }
+
+        public void GameAppStartGameFinished()
+        {
+            LauncherMgr.HideAll();
         }
     }
 }

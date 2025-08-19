@@ -24,7 +24,8 @@ public static class TEngineSettingsProvider
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("AOTMetaAssemblies"));  
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("LogicMainDllName"));  
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("AssemblyTextAssetExtension"));  
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("AssemblyTextAssetPath"));  
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("AssemblyTextAsset2AOTPath"));  
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("AssemblyTextAsset2HotFixPath"));  
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("UpdateStyle"));  
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("ResDownLoadPath"));  
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("FallbackResDownLoadPath"));  
